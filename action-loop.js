@@ -13,8 +13,11 @@ if (Meteor.isClient) {
 }
 
 /**
- * Comment out the config and the layouts set by the controllers
- * will work.
+ * When using Router.configure the layout cannot be overridden by
+ * controllers. Overriding in a route still works.
+ *
+ * When not using Router.configure overriding and inheriting works fine from
+ * controllers.
  */
 Router.configure({
   layoutTemplate: 'layout-red',
@@ -33,6 +36,9 @@ SecondLevelController = FirstLevelController.extend({
 /** Should just inherit and be red */
 ThirdLevelController = SecondLevelController.extend({});
 
+/** Overriding in the route instead (see below). This works regardless of Router.configure */
+FourthLevelController = ThirdLevelController.extend({});
+
 Router.map(function() {
   this.route('firstLevel', {
     path: '/',
@@ -48,6 +54,14 @@ Router.map(function() {
     path: 'third',
 
     controller: ThirdLevelController,
+  });
+
+  this.route('fourthLevel', {
+    path: 'fourth',
+
+    layoutTemplate: 'layout-blue',
+
+    controller: FourthLevelController,
   });
 });
 
